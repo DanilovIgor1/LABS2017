@@ -1,0 +1,170 @@
+//Дана матрица, содержащая как положительные, так и отрицательные элементы.
+//Удалить все ее столбцы, содержащие только положительные элементы.
+
+#include "stdafx.h"
+#include <iostream>
+#include <time.h>
+#include <cmath>
+#include <locale>
+#include <fstream>
+using namespace std;
+
+
+
+//Рандомное заполнение матрицы
+int **InputMatrix(int str, int col)//str- кол-во строк col-кол-во столбцов
+{
+	int i,j;
+	int **A = new int*[str];
+	for (i = 0; i < str; ++i)
+		A[i] = new int[col];
+
+	return A;
+}
+
+
+//Вывод исходной матрицы
+void PrintMatrix(int **A,int str,int col)
+{
+	for (int i = 0; i < str; i++)
+	{			
+		for (int j = 0; j < col; j++)
+			cout << A[i][j] << '\t';
+		cout << endl;
+	}	
+}	
+
+//Очистка памяти
+void DeleteMatrix(int **A, int str)
+{
+	for (int i = 0; i < str; i++)
+		delete[]A[i];
+	delete A;
+	A = nullptr;
+}
+//Основное задание
+void MainTask (int **A, int str, int &col)
+{
+	int cntPos = 0;
+	bool flag;
+	int j;
+	for (j = 0; j < col; j++) 
+	{
+		flag = true;
+		for (int i = 0; i < str && flag; i++)
+			if (A[i][j] <= 0) 
+				flag = false;
+		if (flag) 
+			cntPos++;
+		else 
+			for (int i = 0; i < str; i++)
+				A[i][j - cntPos] = A[i][j];	
+	}
+	col -= cntPos;
+}
+
+int main(int argc, _TCHAR* argv[])
+{
+	setlocale(0, "");
+	int Col, Str, **matrix = nullptr;
+	string str;
+	int Y;
+	do
+	{
+		cout << " **МЕНЮ** " << endl;
+		cout << "1:Чтение данных из файла " << endl;
+		cout << "2:Чтение данных из консоли" << endl;
+		cout << endl << endl;
+		cout << "Выбор: ";
+		cin >> Y;
+	
+	} while ((Y != 1) && (Y != 2));
+	if (Y == 1)
+	{
+		char str[32]; 
+		cout << "Введите имя файла:\n"; 
+		cin >> str; 
+		// Открытие введенного пользователем файла 
+		ifstream file(str); 
+		if (!file.good()) 
+		{ 
+		cout << "Не удается открыть файл.\n"; 
+		return 0; 
+		} 
+		else 
+		{ 
+		// Инициализация матрицы 
+		file >> Str; 
+		file >> Col; 
+		matrix = InputMatrix(Str, Col);
+		bool ok = true; 
+		int i = 0, j = 0; 
+		while (i < Str && !file.eof()) 
+		{  
+			while (j < Col && !file.eof()) 
+			{ 
+				int a; 
+				file >> a; 
+				matrix[i][j] = a; 
+				j++; 
+			} 
+			j=0;
+			i++; 
+		} 
+		if (i < Str - 1) 
+		{ 
+		cout << "В файле недостаточно данных.\n" << endl; 
+		ok = false; 
+		} 
+		file.close(); 
+		if (!ok) 
+		{ 
+			return 0; 
+		} 
+		} 
+
+		cout << "Исходная матрица\n";
+		PrintMatrix(matrix, Str, Col);
+		cout << endl;
+		cout << "Отредактированная матрица";
+		cout << endl;
+		MainTask(matrix, Str, Col);
+		if (Col == 0) 			
+			cout << "Матрица состоит только из положительных столбцов" << endl;
+		else 
+			PrintMatrix(matrix, Str, Col);
+		DeleteMatrix(matrix, Str);
+		system("pause");
+		}
+	else
+	{
+		cout << "Введите Col (ширину матрицы): ";
+		cin >> Col;
+		cout << "Введите Str (высоту матрицы): ";
+		cin >> Str;
+		matrix = new int*[Col];//создаем массив 
+		for (int i = 0; i < Col; i++)
+		{
+			matrix[i] = new int[Str];
+		}
+		matrix = InputMatrix(Str, Col);
+		srand(time(0));
+		for (int i = 0; i < Str; i++)
+			for (int j = 0; j < Col; j++)
+				matrix[i][j] = rand() % 100 - 15;
+		cout << "Исходная матрица";
+		cout << endl;
+		PrintMatrix(matrix, Str, Col);
+		cout << "Отредактированная матрица";
+		cout <<endl;
+
+		MainTask(matrix, Str, Col);
+		if (Col == 0)
+			cout << "Матрица состоит только из положительных столбцов" << endl;
+		else
+			PrintMatrix(matrix, Str, Col);
+		DeleteMatrix(matrix, Col);
+		system("pause");
+	}
+}
+
