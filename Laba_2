@@ -1,0 +1,156 @@
+#include "stdafx.h"
+#include <iostream>
+using namespace std;
+const double PI = 3.14159;
+class Circle
+{
+public:
+    Circle();
+    Circle(double rad, double x, double y);
+    double getRadius();
+    void setRadius(double rad);
+    double getCenterX();
+    double getCenterY();
+    void setCenter(double x, double y);
+    double getLength();
+    double getSquare();
+    bool isEqual(double rad);
+
+    
+private:
+    double radius;
+    struct Center
+    {
+        double x;
+        double y;
+    };
+    Center center;
+    
+};
+Circle::Circle()
+{
+    radius =0;
+    center.x = 0;
+    center.y = 0;
+}
+Circle::Circle(double rad, double x, double y)
+{
+    if (rad<0)
+    {
+        radius=-rad;
+    }
+    else
+    {
+        radius=rad;
+    }
+    center.x = x;
+    center.y = y;
+}
+double Circle::getRadius()
+{
+    return radius;
+}
+double Circle::getCenterX()
+{
+    return center.x;
+}
+double Circle::getCenterY()
+{
+    return center.y;
+}
+void Circle::setRadius(double rad)
+{
+    if (rad<0)
+    {
+        radius=-rad;
+    }
+    else
+    {
+        radius=rad;
+    }
+}
+void Circle::setCenter(double x, double y)
+{
+    center.x = x;
+    center.y = y;
+}
+double Circle::getLength()
+{
+    return 2*PI*radius;
+}
+double Circle::getSquare()
+{
+    return PI*radius*radius;
+}
+bool Circle::isEqual(double rad)
+{
+    return ((radius==rad) || (radius==-rad));
+}
+
+//меню
+int Menu() {
+    cout << "---------------------------------------" << endl;
+    cout << "                 МЕНЮ                  " << endl;
+    cout << "---------------------------------------" << endl;
+    cout << "1 - Узнать длину окружности" << endl;
+    cout << "2 - Узнать площадь круга" << endl;
+    cout << "3 - Равны ли две окружности" << endl;
+    cout << "---------------------------------------" << endl;
+    int n;
+    cin >> n ;
+    return n;
+}
+
+
+int main()
+{
+	setlocale(0,"");
+    int n;
+    do {
+        
+        n=Menu();
+        switch (n)
+        {
+            case 1:
+				{
+					cout << "Введите радиус, координату Х и координату У" << endl;
+					double rad, x, y;
+					cin >> rad >> x >> y;
+					Circle c1(rad,x,y);
+					cout << c1.getLength() << endl;
+					break;
+				}
+            case 2:
+				{
+					cout << "Введите радиус, координату Х и координату У" << endl;
+					double rad1, x1, y1;
+					cin >> rad1 >> x1 >> y1;
+					Circle c2(rad1,x1,y1);
+					cout << c2.getSquare() << endl;
+					break;
+				}
+            case 3:
+				{
+					cout << "Введите радиусы двух окружностей" << endl;
+					double rad3, rad2;
+					cin >> rad3 >> rad2;
+					Circle c3(rad3,0,0);
+					if (c3.isEqual(rad2))
+						{
+							cout << "Окружности равны" << endl;
+						}
+					else
+						{
+							cout << "Окружности не равны" << endl;
+						};
+					break;
+				}
+            default: cout << "Введенное значение неверно." << endl;
+        }
+    } while ((n<1) || (n>3));
+    
+	system("pause");
+    return 0;
+}
+
+
